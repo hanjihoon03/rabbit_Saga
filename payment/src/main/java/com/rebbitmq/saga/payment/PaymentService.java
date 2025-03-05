@@ -26,14 +26,14 @@ public class PaymentService {
         Payment payment = Payment.builder()
             .paymentId(UUID.randomUUID())
             .userId(deliveryMessage.getUserId())
-            .payAmount(deliveryMessage.getPayAmount())
             .payStatus("SUCCESS")
             .build();
 
         Integer payAmount = deliveryMessage.getPayAmount();
 
-        if (payment.getPayAmount() >= 10000) {
-            log.error("Payment amount exceeds limit : {}", payAmount);
+        if (payAmount >= 10000) {
+            log.error("Payment amount exceeds limit: {}", payAmount);
+            payment.setPayStatus("CANCEL");
             deliveryMessage.setErrorType("PAYMENT_LIMIT_EXCEEDED");
             this.rollbackPayment(deliveryMessage);
         }
