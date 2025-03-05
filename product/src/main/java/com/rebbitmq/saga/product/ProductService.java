@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * @author : hanjihoon
@@ -17,7 +18,7 @@ public class ProductService {
 
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("${market.payment}")
+    @Value("${message.queue.payment}")
     private String paymentQueue;
 
     @Value("${message.queue.err.order}")
@@ -37,6 +38,9 @@ public class ProductService {
 
     public void rollbackProduct(DeliveryMessage deliveryMessage) {
         log.info("PRODUCT ROLLBACK");
+        if (!StringUtils.hasText(deliveryMessage.getErrorType())) {
+            deliveryMessage.setErrorType("PRODUCT ERROR");
+        }
         rabbitTemplate.convertAndSend(errOrderQueue, deliveryMessage);
     }
 }
