@@ -24,8 +24,14 @@ repositories {
 }
 
 dependencies {
+	// Jackson 의존성
+	// Jackson 의존성 넣는 이유는 객체와 JSON 직렬화를 위해 따로 추가함.
+	//spring web에는 들어있지만 web을 사용하지 않는다면 별도로 추가.
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.core:jackson-core'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations'
+
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
