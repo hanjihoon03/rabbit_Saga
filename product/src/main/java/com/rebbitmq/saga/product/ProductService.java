@@ -29,7 +29,7 @@ public class ProductService {
         Integer productQuantity = deliveryMessage.getProductQuantity();
 
         if (productId != 1 && productQuantity > 1) {
-
+            this.rollbackProduct(deliveryMessage);
             return;
         }
 
