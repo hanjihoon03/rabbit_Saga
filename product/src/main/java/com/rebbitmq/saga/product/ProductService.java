@@ -17,18 +17,26 @@ public class ProductService {
 
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("${message.queue.payment}")
+    @Value("${market.payment}")
     private String paymentQueue;
+
+    @Value("${message.queue.err.order}")
+    private String errOrderQueue;
 
     public void reduceProductAmount(DeliveryMessage deliveryMessage) {
         Integer productId = deliveryMessage.getProductId();
         Integer productQuantity = deliveryMessage.getProductQuantity();
 
         if (productId != 1 && productQuantity > 1) {
+
             return;
         }
 
         rabbitTemplate.convertAndSend(paymentQueue, deliveryMessage);
     }
 
+    public void rollbackProduct(DeliveryMessage deliveryMessage) {
+        log.info("PRODUCT ROLLBACK");
+        rabbitTemplate.convertAndSend(errOrderQueue, deliveryMessage);
+    }
 }
